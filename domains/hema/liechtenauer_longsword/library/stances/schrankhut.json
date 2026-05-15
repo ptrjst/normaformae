@@ -1,0 +1,25 @@
+{
+  "_schema_version": "1.0.0",
+  "_schema_type":    "stance",
+
+  "stance_id":        "schrankhut",
+  "discipline_id":    "liechtenauer_longsword",
+  "label":            "Schrankhut",
+  "status":           "draft",
+
+  "extracted_frame":  null,
+  "keypoints":        null,
+  "reference_image":  null,
+  "timestamp_start":  null,
+  "timestamp_end":    null,
+  "source_video":     null,
+
+  "description": "Schrankhut — tief gekreuzte Deckung, Klinge schräg vor dem Körper. Schutz gegen niedrige Angriffe und Vorbereitung für aufsteigende Schnitte.",
+
+  "common_errors": [
+    "Kreuzung der Klinge zu flach — kein Schutz der Beine",
+    "Körperschwerpunkt zu hoch"
+  ],
+
+  "notes": "Wiktenauer: https://wiktenauer.com/wiki/Schrankhut"
+}

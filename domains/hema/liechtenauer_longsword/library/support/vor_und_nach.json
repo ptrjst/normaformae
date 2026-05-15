@@ -1,0 +1,16 @@
+{
+  "_schema_version": "1.0.0",
+  "_schema_type": "support",
+  "technique_id": "vor_und_nach",
+  "discipline_id": "liechtenauer_longsword",
+  "label": "Vor und Nach",
+  "status": "published",
+  "description": "Das Konzept von Vor (Vorzeit) und Nach (Nachzeit) beschreibt die Initiative im Fechten. Wer im Vor agiert, zwingt den Gegner zur Reaktion. Wer im Nach handelt, reagiert auf den Angriff des Gegners. Das Ziel ist es, stets im Vor zu bleiben oder das Vor vom Gegner zu nehmen.",
+  "instruction": "Erkenne, wann du die Initiative hast (Vor) und wann du reagierst (Nach). Versuche durch Vorfühlen (Fühlen in der Bindung) und entschlossenes Handeln das Vor zu halten. Weiche nicht ohne Gegenhandlung aus.",
+  "common_errors": [
+    "Passives Warten — gibt das Vor kampflos ab",
+    "Zu früh handeln ohne Grundlage — wird selbst zur Blöße",
+    "Verwechslung von Vor und Nach in der Bindungsarbeit"
+  ],
+  "referenced_by": []
+}

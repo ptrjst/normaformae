@@ -1,0 +1,13 @@
+{
+  "_comment": "Domain template — copy this folder to domains/<domain_id>/ to create a new domain.",
+  "_comment_language": "All label/description values must be in the target language (currently German). Keys stay in English.",
+
+  "domain_id":        "REPLACE_WITH_DOMAIN_ID",
+  "display_name":     "REPLACE: Anzeigename des Bereichs (z.B. 'Historische Europäische Kampfkünste')",
+  "description":      "REPLACE: Kurze Beschreibung des Bereichs für die Benutzeroberfläche.",
+  "version":          "1.0.0",
+
+  "disciplines": [
+    "REPLACE: Liste der Disziplin-IDs unter diesem Bereich, z.B. 'liechtenauer_longsword'"
+  ]
+}

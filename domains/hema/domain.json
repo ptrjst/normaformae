@@ -1,0 +1,10 @@
+{
+  "domain_id":    "hema",
+  "display_name": "Historische Europäische Kampfkünste (HEMA)",
+  "description":  "Historische europäische Kampfkünste nach den Quellen der alten Meister. Umfasst Fechttraditionen mit verschiedenen Waffen und Stilen.",
+  "version":      "1.0.0",
+
+  "disciplines": [
+    "liechtenauer_longsword"
+  ]
+}

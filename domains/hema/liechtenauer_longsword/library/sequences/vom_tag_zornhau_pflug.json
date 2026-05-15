@@ -1,0 +1,31 @@
+{
+  "_schema_version": "1.0.0",
+  "_schema_type":    "sequence",
+
+  "sequence_id":     "vom_tag_zornhau_pflug",
+  "discipline_id":   "liechtenauer_longsword",
+  "label":           "Vom Tag — Zornhau — Pflug",
+  "status":          "draft",
+
+  "from_stance_id":  "vom_tag",
+  "transition_id":   "zornhau",
+  "to_stance_id":    "pflug",
+
+  "duration_seconds": null,
+
+  "description": "Grundlegende Angriffssequenz: aus dem Vom Tag wird ein kraftvoller Zornhau geführt, der in den Pflug übergeht. Basis des Zornhau-Absetzens.",
+
+  "motion_cues": [
+    "Schritt vor mit dem hinteren Fuß gleichzeitig mit dem Hieb",
+    "Klinge bleibt auf der Mittellinie",
+    "Pflug als sofortige Bereitschaft für den Nachstich"
+  ],
+
+  "common_errors": [
+    "Schritt und Hieb zeitlich getrennt — Kraft geht verloren",
+    "Überschreiten der Mittellinie nach rechts (Weichen)",
+    "Kein stabiler Pflug am Ende — Spitze sinkt"
+  ],
+
+  "notes": "Kernsequenz des Zornhau-Systems. Wiktenauer: https://wiktenauer.com/wiki/Zornhau"
+}

@@ -1,0 +1,25 @@
+{
+  "_schema_version": "1.0.0",
+  "_schema_type":    "stance",
+
+  "stance_id":        "zornhut",
+  "discipline_id":    "liechtenauer_longsword",
+  "label":            "Zornhut",
+  "status":           "draft",
+
+  "extracted_frame":  null,
+  "keypoints":        null,
+  "reference_image":  null,
+  "timestamp_start":  null,
+  "timestamp_end":    null,
+  "source_video":     null,
+
+  "description": "Zornhut — kraftvolle seitliche Hochdeckung, Schwert weit hinter der Schulter. Ausgangsposition für den Zornhau. Betont den zornigen, kraftvollen Charakter des Hiebes.",
+
+  "common_errors": [
+    "Schwert nicht weit genug zurückgenommen",
+    "Schulter zu verspannt — Bewegungsradius eingeschränkt"
+  ],
+
+  "notes": "Wiktenauer: https://wiktenauer.com/wiki/Zornhut"
+}

@@ -1,0 +1,26 @@
+{
+  "_schema_version": "1.0.0",
+  "_schema_type":    "stance",
+
+  "stance_id":        "ochs",
+  "discipline_id":    "liechtenauer_longsword",
+  "label":            "Ochs",
+  "status":           "draft",
+
+  "extracted_frame":  null,
+  "keypoints":        null,
+  "reference_image":  null,
+  "timestamp_start":  null,
+  "timestamp_end":    null,
+  "source_video":     null,
+
+  "description": "Ochsenhut — das Schwert wird auf Kopfhöhe gehalten, Spitze droht dem Gesicht oder der Brust des Gegners. Starke Deckung gegen hohe Angriffe. Links und rechts möglich.",
+
+  "common_errors": [
+    "Spitze zeigt zu hoch statt zum Gesicht des Gegners",
+    "Hände nicht auf Kopfhöhe",
+    "Körper nicht hinter der Klinge ausgerichtet"
+  ],
+
+  "notes": "Einer der vier Haupthuten. Wiktenauer: https://wiktenauer.com/wiki/Ochs"
+}

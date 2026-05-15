@@ -1,0 +1,20 @@
+{
+  "_schema_version": "1.0.0",
+  "_schema_type": "support",
+  "technique_id": "fuehlen",
+  "discipline_id": "liechtenauer_longsword",
+  "label": "Fühlen",
+  "status": "published",
+  "description": "Fühlen bezeichnet das taktile Wahrnehmen des gegnerischen Schwertes in der Bindung (Krieg). Durch den Klingenkontakt spürt man, ob der Gegner hart (stark drückt) oder weich (wenig Druck) ist, und wählt die entsprechende Reaktion: gegen Hart weich ausweichen, gegen Weich hart durchbrechen.",
+  "instruction": "Sobald die Klingen sich berühren, entspanne den Arm leicht und nimm den Druck wahr. Hart: der Gegner drückt stark — lass nach und führe einen Schnitt um die Klinge. Weich: der Gegner gibt nach — stoße durch ohne zu zögern.",
+  "common_errors": [
+    "Zu starres Handgelenk — Fühlen wird unmöglich",
+    "Reaktion vor dem Kontakt — Raten statt Fühlen",
+    "Immer die gleiche Reaktion unabhängig vom Druck"
+  ],
+  "referenced_by": [
+    "winden",
+    "absetzen",
+    "vom_tag_zornhau_pflug"
+  ]
+}

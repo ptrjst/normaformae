@@ -1,0 +1,28 @@
+{
+  "_schema_version": "1.0.0",
+  "_schema_type":    "stance",
+
+  "stance_id":        "vom_tag",
+  "discipline_id":    "liechtenauer_longsword",
+  "label":            "Vom Tag",
+  "status":           "draft",
+
+  "extracted_frame":  null,
+  "keypoints":        null,
+
+  "reference_image":  null,
+
+  "timestamp_start":  null,
+  "timestamp_end":    null,
+  "source_video":     null,
+
+  "description": "Hochdeckung — das Schwert wird über der Schulter oder am Haupt gehalten. Starke Ausgangsposition für kraftvolle Oberhäue. Zwei Varianten: Schwert an der Schulter (niedriger Vom Tag) oder über dem Haupt (hoher Vom Tag).",
+
+  "common_errors": [
+    "Ellbogen zu weit vom Körper abgespreizt",
+    "Gewicht nicht auf dem hinteren Fuß",
+    "Spitze zeigt zu weit nach oben statt leicht nach vorn"
+  ],
+
+  "notes": "Einer der vier Haupthuten (Vier Leger) nach Liechtenauer. Wiktenauer: https://wiktenauer.com/wiki/Vom_Tag"
+}

@@ -1,0 +1,26 @@
+{
+  "_schema_version": "1.0.0",
+  "_schema_type":    "flow",
+
+  "flow_id":          "meisterhau_grundlagen",
+  "discipline_id":    "liechtenauer_longsword",
+  "label":            "Meisterhäue — Grundlagen",
+  "status":           "draft",
+  "practitioner_level": "schueler",
+
+  "description": "Einführung in die fünf Meisterhäue nach Liechtenauer. Jede Sequenz demonstriert einen Meisterhau aus seiner typischen Ausgangsposition in die Endposition.",
+
+  "sequence_ids": [
+    "vom_tag_zornhau_pflug"
+  ],
+
+  "notes": "Entwurf — weitere Sequenzen für Krumphau, Zwerchhau, Schielhau und Scheitelhau werden ergänzt.",
+
+  "version_history": [
+    {
+      "version":   "0.1.0",
+      "date":      "2026-05-14",
+      "note":      "Erster Entwurf — nur Zornhau-Sequenz vorhanden"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_schema_version": "1.0.0",
+  "_schema_type":    "stance",
+
+  "stance_id":        "pflug",
+  "discipline_id":    "liechtenauer_longsword",
+  "label":            "Pflug",
+  "status":           "draft",
+
+  "extracted_frame":  null,
+  "keypoints":        null,
+  "reference_image":  null,
+  "timestamp_start":  null,
+  "timestamp_end":    null,
+  "source_video":     null,
+
+  "description": "Pflugschar — das Schwert wird auf Hüfthöhe gehalten, Spitze droht der Brust oder dem Bauch des Gegners. Deckung gegen niedrige und mittlere Angriffe. Links und rechts möglich.",
+
+  "common_errors": [
+    "Spitze zeigt nach unten statt zum Gegner",
+    "Hände zu tief, Klinge ohne Bedrohungslinie",
+    "Vorderer Arm zu gestreckt — keine Kontrolle bei Bindung"
+  ],
+
+  "notes": "Einer der vier Haupthuten. Wiktenauer: https://wiktenauer.com/wiki/Pflug"
+}
