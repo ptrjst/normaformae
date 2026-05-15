@@ -495,7 +495,9 @@ class AuthorWindow(QMainWindow):
             QMessageBox.critical(self, "Videofehler", str(e))
 
     def _on_stance_saved(self, stance_id: str) -> None:
-        """Called after AnnotationPanel saves a Stance — refresh catalog."""
+        """Called after AnnotationPanel saves a Stance — refresh catalog.
+        AnnotationPanel already mutates self._stances in-place before emitting;
+        no copy needed here."""
         self._populate_catalog()
         self.statusBar().showMessage(f"Hut gespeichert: {stance_id}")
 

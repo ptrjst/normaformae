@@ -52,6 +52,11 @@ def _build_parser() -> argparse.ArgumentParser:
         "--video-only", action="store_true",
         help="Nur augmentiertes Video erzeugen",
     )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Debug-Logging aktivieren (Konsole + logs/normaformae.log)",
+    )
     return parser
 
 
@@ -60,7 +65,9 @@ def _build_parser() -> argparse.ArgumentParser:
 # ---------------------------------------------------------------------------
 
 def run_cli(video_path: str, discipline_id: str | None,
-            doc_only: bool, video_only: bool) -> int:
+            doc_only: bool, video_only: bool, debug: bool = False) -> int:
+    from normaformae.core.logger import setup_logging
+    setup_logging(debug=debug)
     from normaformae.core.discipline_loader import load_discipline, DisciplineLoadError
     from normaformae.core.mock_engine import build_mock_recognition_result
     from normaformae.cli.output_writer import write_cli_outputs
@@ -127,6 +134,10 @@ def _list_all_discipline_ids() -> list[str]:
 # ---------------------------------------------------------------------------
 
 def run_gui() -> int:
+    import os
+    from normaformae.core.logger import setup_logging
+    debug = os.environ.get("NORMAFORMAE_DEBUG", "0").strip() == "1"
+    setup_logging(debug=debug)
     from PyQt6.QtWidgets import QApplication
     from PyQt6.QtCore import Qt
     from normaformae.glossary import UI
@@ -175,6 +186,7 @@ def main() -> None:
             discipline_id=args.discipline,
             doc_only=args.doc_only,
             video_only=args.video_only,
+            debug=args.debug,
         ))
     else:
         sys.exit(run_gui())

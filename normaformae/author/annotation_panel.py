@@ -26,6 +26,9 @@ from PyQt6.QtWidgets import (
 )
 
 from normaformae.glossary import UI
+from normaformae.core.logger import get_logger
+
+log = get_logger(__name__)
 
 
 class AnnotationPanel(QWidget):
@@ -303,6 +306,12 @@ class AnnotationPanel(QWidget):
         self._progress.setVisible(True)
         self._btn_extract.setEnabled(False)
         self._result_label.setText("Extraktion läuft…")
+        log.info(
+            "Annotation gestartet: Typ=%s  Bilder=%s–%s  Video=%s",
+            self._selected_type,
+            self._start_frame, self._end_frame,
+            self._source_video,
+        )
 
         try:
             if self._selected_type == "stance":
@@ -310,6 +319,7 @@ class AnnotationPanel(QWidget):
             elif self._selected_type == "transition":
                 self._save_transition(label)
         except Exception as e:
+            log.error("Annotationsfehler: %s", e, exc_info=True)
             self._progress.setVisible(False)
             self._btn_extract.setEnabled(True)
             self._result_label.setText(f"Fehler: {e}")
@@ -374,6 +384,12 @@ class AnnotationPanel(QWidget):
 
         self._progress.setVisible(False)
         vis_pct = result.visible_count / 33 * 100
+        log.info(
+            "Hut gespeichert: id=%s  label=%s  ts=%.3f–%.3fs  "  
+            "sichtbar=%d/33 (%.0f%%)  Schwellenwert=%.2f",
+            stance_id, label, ts_start, ts_end,
+            result.visible_count, vis_pct, result.threshold_used,
+        )
         self._result_label.setText(
             f"✓ '{label}' gespeichert  ·  "
             f"{result.visible_count}/33 Punkte sichtbar ({vis_pct:.0f}%)  ·  "
@@ -420,6 +436,10 @@ class AnnotationPanel(QWidget):
         self._sequences[seq_id] = seq_data
 
         self._progress.setVisible(False)
+        log.info(
+            "Übergang gespeichert: id=%s  label=%s  ts=%.3f–%.3fs  Dauer=%.3fs",
+            seq_id, label, ts_start, ts_end, duration,
+        )
         self._result_label.setText(
             f"✓ Übergang '{label}' gespeichert  ·  Dauer: {duration:.3f}s"
         )

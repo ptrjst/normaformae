@@ -160,6 +160,31 @@ normaformae/                    ← project root
 
 ---
 
+## Logging
+
+Logs are always written to `logs/normaformae.log` (rotating, 1 MB, 3 backups).
+
+**CLI debug mode:**
+```powershell
+normaformae <video> --debug
+```
+
+**GUI debug mode:**
+```powershell
+$env:NORMAFORMAE_DEBUG="1"; normaformae
+```
+
+**Log levels by module:**
+| Module | INFO | DEBUG | WARNING | ERROR |
+|---|---|---|---|---|
+| `app.py` | startup mode, discipline | — | — | — |
+| `video_loader.py` | video opened | frame reads | out-of-range | open/read fail |
+| `keypoint_extractor.py` | model load, averaged result | per-frame visibility | low keypoint count | MediaPipe exception |
+| `normalizer.py` | — | torso length, zeroed points | torso too small | — |
+| `discipline_loader.py` | discipline loaded | save operations | — | validation errors |
+| `annotation_panel.py` | annotation start, stance/transition saved | — | — | extraction errors |
+| `cli/output_writer.py` | output files written | output dir | — | — |
+
 ## To run
 ```powershell
 # Activate venv first

@@ -13,6 +13,11 @@ No PyQt6 imports. Safe for headless / pipeline use.
 from __future__ import annotations
 
 import json
+import logging
+
+from normaformae.core.logger import get_logger
+
+log = get_logger(__name__)
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -31,6 +36,7 @@ def write_cli_outputs(
     Returns dict mapping output type label → absolute file path.
     """
     output_dir = _resolve_output_dir(discipline_path)
+    log.debug("Output-Verzeichnis: %s", output_dir)
 
     timestamp  = datetime.now().strftime("%Y%m%d_%H%M%S")
     disc_id    = result.get("discipline_id", "unknown")
@@ -42,11 +48,13 @@ def write_cli_outputs(
         doc_path = output_dir / f"{disc_id}_{video_name}_{timestamp}_doc.txt"
         _write_document_stub(doc_path, result, video_path)
         written["Dokument"] = str(doc_path)
+        log.info("Dokument-Output geschrieben: %s", doc_path)
 
     if write_video:
         vid_path = output_dir / f"{disc_id}_{video_name}_{timestamp}_video.txt"
         _write_video_stub(vid_path, result, video_path)
         written["Video"] = str(vid_path)
+        log.info("Video-Output geschrieben: %s", vid_path)
 
     return written
 

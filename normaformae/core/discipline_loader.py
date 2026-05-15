@@ -14,6 +14,10 @@ import json
 from pathlib import Path
 from typing import Any
 
+from normaformae.core.logger import get_logger
+
+log = get_logger(__name__)
+
 
 # ---------------------------------------------------------------------------
 # Exceptions
@@ -96,6 +100,7 @@ def load_discipline(discipline_path: str | Path) -> dict[str, Any]:
     cfg         = _load_json(cfg_path)
     _validate_discipline(cfg, cfg_path)
     cfg["path"] = str(path)
+    log.info("Disziplin geladen: %s (v%s)", cfg.get("display_name"), cfg.get("version"))
     return cfg
 
 
@@ -173,18 +178,21 @@ def get_vocabulary(discipline_cfg: dict[str, Any]) -> dict[str, dict[str, str]]:
 def save_stance(discipline_path: str | Path, stance_data: dict[str, Any]) -> Path:
     out = Path(discipline_path) / "library" / "stances" / f"{stance_data['stance_id']}.json"
     _write_json(out, stance_data)
+    log.debug("Hut gespeichert: %s", out)
     return out
 
 
 def save_sequence(discipline_path: str | Path, sequence_data: dict[str, Any]) -> Path:
     out = Path(discipline_path) / "library" / "sequences" / f"{sequence_data['sequence_id']}.json"
     _write_json(out, sequence_data)
+    log.debug("Sequenz gespeichert: %s", out)
     return out
 
 
 def save_flow(discipline_path: str | Path, flow_data: dict[str, Any]) -> Path:
     out = Path(discipline_path) / "library" / "flows" / f"{flow_data['flow_id']}.json"
     _write_json(out, flow_data)
+    log.debug("Fluss gespeichert: %s", out)
     return out
 
 
@@ -192,6 +200,7 @@ def save_support_technique(discipline_path: str | Path,
                            technique_data: dict[str, Any]) -> Path:
     out = Path(discipline_path) / "library" / "support" / f"{technique_data['technique_id']}.json"
     _write_json(out, technique_data)
+    log.debug("Grundtechnik gespeichert: %s", out)
     return out
 
 
@@ -218,6 +227,7 @@ def _validate_discipline(cfg: dict[str, Any], path: Path) -> None:
                 "practitioner_levels", "scoring_criteria", "library_paths", "output"]
     missing  = [k for k in required if k not in cfg]
     if missing:
+        log.error("discipline.json fehlende Felder: %s  Pfad: %s", missing, path)
         raise DisciplineLoadError(
             f"discipline.json at {path} is missing required fields: {missing}"
         )

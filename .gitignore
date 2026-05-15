@@ -28,3 +28,9 @@ build/
 # OS
 .DS_Store
 Thumbs.db
+
+# MediaPipe model files — downloaded, not source
+normaformae/models/*.task
+
+# Log files
+logs/

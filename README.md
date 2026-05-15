@@ -34,6 +34,23 @@ pip install -e . --no-deps
 
 > WeasyPrint (PDF export) requires GTK on Windows — skip until Slice 4.
 
+### 3. Download pose model
+
+Normaformae requires a MediaPipe pose model file (~6.5 MB), downloaded once:
+
+```powershell
+python -m normaformae.models.download_models
+```
+
+To see all available model variants (lite / full / heavy):
+
+```powershell
+python -m normaformae.models.download_models --list
+```
+
+> The model file is saved to `normaformae/models/` and is gitignored.
+> It only needs to be downloaded once per machine.
+
 ### 3. Verify
 
 ```powershell
