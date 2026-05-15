@@ -40,7 +40,7 @@ dev = [
 
 [project.scripts]
 # Single entry point — startup dialog selects domain, discipline, role
-normaformae = "motion_analysis.app:main"
+normaformae = "normaformae.app:main"
 
 [build-system]
 requires = ["hatchling"]

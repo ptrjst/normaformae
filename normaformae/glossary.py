@@ -1,7 +1,7 @@
 """
 glossary.py
 
-Central registry of German content constants for the motion-analysis system.
+Central registry of German content constants for the Normaformae system.
 
 Rules:
 - Keys are English, snake_case — safe for use in code and JSON.
@@ -25,15 +25,14 @@ UI = {
     "role_author":            "Autor",
     "role_user":              "Benutzer",
     "role_trainer":           "Trainer",
-    "confirm":                "Bestätigen",
     "cancel":                 "Abbrechen",
     "close":                  "Schließen",
 
     # Author tool
     "author_window_title":    "Autorenwerkzeug",
     "load_video":             "Video laden",
-    "new_flow":               "Neuer Bewegungsfluss",
-    "open_flow":              "Bewegungsfluss öffnen",
+    "new_flow":               "Neuer {flow}",
+    "open_flow":              "{flow} öffnen",
     "save_draft":             "Entwurf speichern",
     "publish_flow":           "Veröffentlichen",
     "frame_label_stance":     "Hut",
@@ -60,12 +59,12 @@ UI = {
     "analysis_complete":      "Analyse abgeschlossen",
     "export_document":        "Dokument exportieren",
     "export_video":           "Augmentiertes Video exportieren",
-    "no_flow_selected":       "Kein Bewegungsfluss ausgewählt",
+    "no_flow_selected":       "Kein {flow} ausgewählt",  # Slice 3: shown when user submits without a flow
 
     # Recognition result display
     "result_detected_stances":    "Erkannte Huten",
     "result_detected_sequences":  "Erkannte Sequenzen",
-    "result_matched_flows":       "Übereinstimmende Bewegungsflüsse",
+    "result_matched_flows":       "Übereinstimmende {flows}",
     "result_unrecognised":        "Nicht erkannte Abschnitte",
     "result_confidence":          "Sicherheit",
     "result_deviation":           "Abweichung",
@@ -73,7 +72,7 @@ UI = {
 
     # Trainer tool (Slice 5 — strings defined now, used later)
     "trainer_window_title":   "Trainerverwaltung",
-    "assign_flow":            "Bewegungsfluss zuweisen",
+    "assign_flow":            "{flow} zuweisen",  # Slice 5: Trainer UI
     "filter_by_level":        "Nach Niveau filtern",
     "practitioner_history":   "Übungsverlauf",
 
@@ -81,7 +80,7 @@ UI = {
     "error_no_video":         "Kein Video geladen.",
     "error_no_discipline":    "Keine Disziplin ausgewählt.",
     "error_incomplete_stance":"Hut unvollständig — kein extrahiertes Bild vorhanden.",
-    "confirm_publish":        "Soll dieser Bewegungsfluss veröffentlicht werden? Entwürfe können weiterhin bearbeitet werden.",
+    "confirm_publish":        "Soll dieser {flow} veröffentlicht werden? Entwürfe können weiterhin bearbeitet werden.",
     "file_saved":             "Datei gespeichert",
     "output_written":         "Ausgabedatei erstellt",
 }
@@ -390,13 +389,13 @@ HEMA_LIECHTENAUER = {
 
     # Output document section headers
     "output_headers": {
-        "document_title":         "Bewegungsfluss-Analyse",
+        "document_title":         "{flow}-Analyse",
         "discipline_label":       "Disziplin",
-        "flow_label":             "Bewegungsfluss",
+        "flow_label":             "{flow}",
         "analysis_date":          "Analysedatum",
         "detected_stances":       "Erkannte Huten",
         "detected_sequences":     "Erkannte Sequenzen",
-        "matched_flows":          "Übereinstimmende Bewegungsflüsse",
+        "matched_flows":          "Übereinstimmende {flows}",
         "unrecognised_segments":  "Nicht erkannte Abschnitte",
         "description":            "Beschreibung",
         "common_errors":          "Häufige Fehler",
@@ -410,3 +409,33 @@ HEMA_LIECHTENAUER = {
         "draft_warning":          "Entwurf — nicht zur Weitergabe bestimmt",
     },
 }
+
+
+# ---------------------------------------------------------------------------
+# Runtime UI string resolution
+# Fills {flow} / {flows} placeholders using discipline vocabulary.
+# Call once after loading a discipline, cache the result.
+# ---------------------------------------------------------------------------
+
+def resolve_ui(vocab: dict) -> dict:
+    """
+    Return a copy of the UI dict with {flow} and {flows} placeholders
+    replaced by discipline-specific vocabulary labels.
+
+    Args:
+        vocab: output of discipline_loader.get_vocabulary()
+               expects vocab["flow"]["singular"] and vocab["flow"]["plural"]
+
+    Returns:
+        New dict — UI is unchanged (it is the template).
+    """
+    flow_singular = vocab.get("flow", {}).get("singular", "Ablauf")
+    flow_plural   = vocab.get("flow", {}).get("plural",   "Abläufe")
+
+    resolved = {}
+    for key, value in UI.items():
+        if isinstance(value, str):
+            value = value.replace("{flow}", flow_singular)
+            value = value.replace("{flows}", flow_plural)
+        resolved[key] = value
+    return resolved

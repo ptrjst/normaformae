@@ -37,7 +37,7 @@ pip install -e . --no-deps
 ### 3. Verify
 
 ```powershell
-python -c "from motion_analysis.core.discipline_loader import list_domains; print(list_domains())"
+python -c "from normaformae.core.discipline_loader import list_domains; print(list_domains())"
 ```
 
 Expected: HEMA domain printed to console.
@@ -45,7 +45,7 @@ Expected: HEMA domain printed to console.
 ### 4. Run
 
 ```powershell
-python -m motion_analysis.app
+normaformae
 ```
 
 Or after install:

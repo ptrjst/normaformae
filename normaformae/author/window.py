@@ -27,7 +27,7 @@ from normaformae.core.discipline_loader import (
     load_all_flows, load_all_support_techniques, get_vocabulary,
     save_support_technique, DisciplineLoadError,
 )
-from normaformae.glossary import UI
+from normaformae.glossary import UI, resolve_ui
 
 
 class AuthorWindow(QMainWindow):
@@ -49,6 +49,7 @@ class AuthorWindow(QMainWindow):
         self._discipline_path = discipline_path
         self._discipline: dict = {}
         self._vocab: dict = {}
+        self._rui: dict = UI.copy()
         self._stances: dict = {}
         self._sequences: dict = {}
         self._flows: dict = {}
@@ -75,6 +76,7 @@ class AuthorWindow(QMainWindow):
         try:
             self._discipline = load_discipline(self._discipline_path)
             self._vocab      = get_vocabulary(self._discipline)
+            self._rui        = resolve_ui(self._vocab)
             self._stances    = load_all_stances(self._discipline_path)
             self._sequences  = load_all_sequences(self._discipline_path)
             self._flows      = load_all_flows(self._discipline_path)
@@ -95,16 +97,16 @@ class AuthorWindow(QMainWindow):
         self._act_load_video.triggered.connect(self._on_load_video)
         tb.addSeparator()
 
-        self._act_new_flow = tb.addAction(UI["new_flow"])
+        self._act_new_flow = tb.addAction(self._rui["new_flow"])
         self._act_new_flow.triggered.connect(self._on_new_flow)
 
-        self._act_open_flow = tb.addAction(UI["open_flow"])
+        self._act_open_flow = tb.addAction(self._rui["open_flow"])
         self._act_open_flow.triggered.connect(self._on_open_flow)
 
-        self._act_save_draft = tb.addAction(UI["save_draft"])
+        self._act_save_draft = tb.addAction(self._rui["save_draft"])
         self._act_save_draft.triggered.connect(self._on_save_draft)
 
-        self._act_publish = tb.addAction(UI["publish_flow"])
+        self._act_publish = tb.addAction(self._rui["publish_flow"])
         self._act_publish.triggered.connect(self._on_publish)
 
         tb.addSeparator()
@@ -492,21 +494,21 @@ class AuthorWindow(QMainWindow):
             )
 
     def _on_new_flow(self) -> None:
-        _stub_message(self, UI["new_flow"])
+        _stub_message(self, self._rui["new_flow"])
 
     def _on_open_flow(self) -> None:
-        _stub_message(self, UI["open_flow"])
+        _stub_message(self, self._rui["open_flow"])
 
     def _on_save_draft(self) -> None:
-        _stub_message(self, UI["save_draft"])
+        _stub_message(self, self._rui["save_draft"])
 
     def _on_publish(self) -> None:
         reply = QMessageBox.question(
-            self, UI["publish_flow"], UI["confirm_publish"],
+            self, self._rui["publish_flow"], self._rui["confirm_publish"],
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
         )
         if reply == QMessageBox.StandardButton.Yes:
-            _stub_message(self, UI["publish_flow"])
+            _stub_message(self, self._rui["publish_flow"])
 
     def _on_search_wiki(self) -> None:
         from PyQt6.QtGui import QDesktopServices

@@ -1,22 +1,29 @@
-# Virtual environment
-.venv/
-
-# Python cache
+# Python
 __pycache__/
 *.py[cod]
 *.pyo
+*.pyd
+.Python
 
-# Build / dist
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Project runtime state — machine-local, not for version control
+state.json
+
+# Output files — generated, not source
+output/
+
+# Distribution / packaging
 *.egg-info/
 dist/
 build/
+*.egg
 
-# Output files
-output/
-
-# IDE
+# VS Code
 .vscode/
-*.code-workspace
 
 # OS
 .DS_Store

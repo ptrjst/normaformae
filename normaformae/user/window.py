@@ -26,7 +26,7 @@ from PyQt6.QtWidgets import (
 from normaformae.core.discipline_loader import (
     load_discipline, load_published_flows, DisciplineLoadError,
 )
-from normaformae.glossary import UI
+from normaformae.glossary import UI, resolve_ui
 from normaformae.core.mock_engine import build_mock_recognition_result
 
 
@@ -43,6 +43,8 @@ class UserWindow(QMainWindow):
         self._discipline_path = discipline_path
         self._discipline: dict = {}
         self._published_flows: dict = {}
+        self._vocab: dict = {}
+        self._rui: dict = UI.copy()
         self._current_video_path: str = ""
 
         self.setWindowTitle(UI["user_window_title"])
@@ -61,6 +63,9 @@ class UserWindow(QMainWindow):
         try:
             self._discipline = load_discipline(self._discipline_path)
             self._published_flows = load_published_flows(self._discipline_path)
+            from normaformae.core.discipline_loader import get_vocabulary
+            self._vocab = get_vocabulary(self._discipline)
+            self._rui   = resolve_ui(self._vocab)
         except DisciplineLoadError as e:
             QMessageBox.critical(self, "Fehler", str(e))
 
@@ -78,7 +83,7 @@ class UserWindow(QMainWindow):
         tb.addSeparator()
 
         n_flows = len(self._published_flows)
-        flow_info = f"{n_flows} Bewegungsfluss" if n_flows == 1 else f"{n_flows} Bewegungsflüsse"
+        flow_info = f"{n_flows} {self._vocab.get("flow",{}).get("singular","Ablauf")}" if n_flows == 1 else f"{n_flows} {self._vocab.get("flow",{}).get("plural","Abläufe")}"
         self._flow_count_label = QLabel(flow_info + " verfügbar  ")
         tb.addWidget(self._flow_count_label)
 
@@ -138,7 +143,7 @@ class UserWindow(QMainWindow):
         layout.addWidget(video_box)
 
         # Section: flow selection
-        flow_box = QGroupBox("Bewegungsflüsse")
+        flow_box = QGroupBox(self._vocab.get("flow", {}).get("plural", "Abläufe"))
         flow_layout = QVBoxLayout(flow_box)
 
         if self._published_flows:
@@ -146,8 +151,7 @@ class UserWindow(QMainWindow):
                 item = QListWidgetItem(flow.get("label", fid))
                 item.setData(Qt.ItemDataRole.UserRole, fid)
         else:
-            no_flows = QLabel("Keine veröffentlichten Bewegungsflüsse vorhanden.\n"
-                              "Der Autor muss zuerst Inhalte veröffentlichen.")
+            no_flows = QLabel(f"Keine veröffentlichten {self._vocab.get('flow',{}).get('plural','Abläufe')} vorhanden.\nDer Autor muss zuerst Inhalte veröffentlichen.")
             no_flows.setStyleSheet("color: gray; font-size: 11px;")
             no_flows.setWordWrap(True)
             flow_layout.addWidget(no_flows)
@@ -356,7 +360,7 @@ class UserWindow(QMainWindow):
         for seq in result.get("detected_sequences", []):
             lines.append(f"  {seq['label']}")
 
-        lines.append(f"\n=== {UI['result_matched_flows']} ===")
+        lines.append(f"\n=== {self._rui['result_matched_flows']} ===")
         matched = result.get("matched_flows", [])
         if matched:
             for mf in matched:

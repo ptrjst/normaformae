@@ -1,12 +1,12 @@
 """
 startup.py
 
-Startup dialog — first thing the user sees.
-Step 1: select Domain
-Step 2: select Discipline (filtered by domain)
-Step 3: select Role (Autor / Benutzer — Trainer deferred to Slice 5)
+Startup dialog — domain → discipline selection, then one-click role launch.
 
-Uses real data from discipline_loader. No mock here.
+No Bestätigen button. Clicking a role button immediately accepts the dialog
+and launches the corresponding window. Domain/discipline combos stay for
+switching context. State is restored from state.json on open and saved on
+role selection.
 """
 
 from __future__ import annotations
@@ -18,16 +18,23 @@ from PyQt6.QtWidgets import (
 )
 
 from normaformae.core.discipline_loader import list_domains, list_disciplines
+from normaformae.core.app_state import load_state, update_state
 from normaformae.glossary import UI
 
 
 class StartupDialog(QDialog):
     """
     Modal startup dialog.
-    After exec() returns QDialog.DialogCode.Accepted:
+
+    User flow:
+        1. Domain and discipline are pre-selected from last session (state.json).
+        2. User adjusts discipline if needed via combo boxes.
+        3. User clicks a role button → dialog accepts immediately.
+
+    After exec() returns Accepted:
         self.selected_role            → "author" | "user"
         self.selected_discipline_path → str path to discipline folder
-        self.selected_discipline_cfg  → dict of the discipline.json
+        self.selected_discipline_cfg  → dict of discipline.json
     """
 
     def __init__(self) -> None:
@@ -36,20 +43,20 @@ class StartupDialog(QDialog):
         self.setMinimumWidth(440)
         self.setModal(True)
 
-        # State populated as user makes selections
-        self.selected_role: str = ""
+        self.selected_role: str            = ""
         self.selected_discipline_path: str = ""
         self.selected_discipline_cfg: dict = {}
 
-        # Internal data
-        self._domains: list[dict] = []
+        self._domains:     list[dict] = []
         self._disciplines: list[dict] = []
+        self._state = load_state()
 
         self._build_ui()
         self._load_domains()
+        self._restore_state()
 
     # ------------------------------------------------------------------
-    # UI construction
+    # UI
     # ------------------------------------------------------------------
 
     def _build_ui(self) -> None:
@@ -68,13 +75,12 @@ class StartupDialog(QDialog):
 
         root.addWidget(_divider())
 
-        # Domain selector
+        # Domain + discipline selectors
         root.addWidget(_label(UI["select_domain"]))
         self._domain_combo = QComboBox()
         self._domain_combo.currentIndexChanged.connect(self._on_domain_changed)
         root.addWidget(self._domain_combo)
 
-        # Discipline selector
         root.addWidget(_label(UI["select_discipline"]))
         self._discipline_combo = QComboBox()
         self._discipline_combo.currentIndexChanged.connect(self._on_discipline_changed)
@@ -82,42 +88,42 @@ class StartupDialog(QDialog):
 
         root.addWidget(_divider())
 
-        # Role selector
+        # Role selection — clicking a button launches immediately
         root.addWidget(_label(UI["select_role"]))
+
+        hint = QLabel("Rolle auswählen, um direkt zu starten")
+        hint.setStyleSheet("color: gray; font-size: 11px;")
+        hint.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        root.addWidget(hint)
+
         role_row = QHBoxLayout()
         role_row.setSpacing(12)
 
         self._btn_author = QPushButton(UI["role_author"])
-        self._btn_author.setCheckable(True)
-        self._btn_author.setMinimumHeight(40)
-        self._btn_author.clicked.connect(lambda: self._select_role("author"))
+        self._btn_author.setMinimumHeight(48)
+        self._btn_author.clicked.connect(lambda: self._launch_role("author"))
 
         self._btn_user = QPushButton(UI["role_user"])
-        self._btn_user.setCheckable(True)
-        self._btn_user.setMinimumHeight(40)
-        self._btn_user.clicked.connect(lambda: self._select_role("user"))
+        self._btn_user.setMinimumHeight(48)
+        self._btn_user.clicked.connect(lambda: self._launch_role("user"))
 
-        # Trainer button — visible but disabled until Slice 5
         self._btn_trainer = QPushButton(f"{UI['role_trainer']} (Slice 5)")
+        self._btn_trainer.setMinimumHeight(48)
         self._btn_trainer.setEnabled(False)
-        self._btn_trainer.setMinimumHeight(40)
-        self._btn_trainer.setToolTip("Trainerfunktion wird in einem späteren Schritt freigeschaltet.")
+        self._btn_trainer.setToolTip(
+            "Trainerfunktion wird in einem späteren Schritt freigeschaltet."
+        )
 
         role_row.addWidget(self._btn_author)
         role_row.addWidget(self._btn_user)
         role_row.addWidget(self._btn_trainer)
         root.addLayout(role_row)
 
-        root.addItem(QSpacerItem(0, 8, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding))
+        root.addItem(
+            QSpacerItem(0, 8, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        )
 
-        # Confirm button
-        self._btn_confirm = QPushButton(UI["confirm"])
-        self._btn_confirm.setMinimumHeight(44)
-        self._btn_confirm.setEnabled(False)
-        self._btn_confirm.clicked.connect(self._on_confirm)
-        root.addWidget(self._btn_confirm)
-
-        # Status line
+        # Status line — shows selected discipline name
         self._status_label = QLabel("")
         self._status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self._status_label.setStyleSheet("color: gray; font-size: 11px;")
@@ -161,35 +167,42 @@ class StartupDialog(QDialog):
     def _on_discipline_changed(self, index: int) -> None:
         if index < 0 or not self._disciplines:
             return
-        self.selected_discipline_cfg = self._disciplines[index]
+        self.selected_discipline_cfg  = self._disciplines[index]
         self.selected_discipline_path = self._disciplines[index].get("path", "")
-        self._update_confirm_state()
+        self._update_role_buttons()
+        disc_name = self.selected_discipline_cfg.get("display_name", "")
+        self._status_label.setText(disc_name)
 
     # ------------------------------------------------------------------
-    # Role selection
+    # State restore
     # ------------------------------------------------------------------
 
-    def _select_role(self, role: str) -> None:
+    def _restore_state(self) -> None:
+        last_path = self._state.get("last_discipline_path", "")
+        if last_path:
+            for i in range(self._discipline_combo.count()):
+                if self._discipline_combo.itemData(i) == last_path:
+                    self._discipline_combo.setCurrentIndex(i)
+                    break
+
+    def _update_role_buttons(self) -> None:
+        enabled = bool(self.selected_discipline_path)
+        self._btn_author.setEnabled(enabled)
+        self._btn_user.setEnabled(enabled)
+
+    # ------------------------------------------------------------------
+    # Launch — role click = immediate accept
+    # ------------------------------------------------------------------
+
+    def _launch_role(self, role: str) -> None:
+        if not self.selected_discipline_path:
+            self._status_label.setText("Bitte zuerst eine Disziplin auswählen.")
+            return
         self.selected_role = role
-        self._btn_author.setChecked(role == "author")
-        self._btn_user.setChecked(role == "user")
-        self._update_confirm_state()
-
-    def _update_confirm_state(self) -> None:
-        ready = bool(self.selected_role and self.selected_discipline_path)
-        self._btn_confirm.setEnabled(ready)
-        if ready:
-            disc_name = self.selected_discipline_cfg.get("display_name", "")
-            role_label = UI["role_author"] if self.selected_role == "author" else UI["role_user"]
-            self._status_label.setText(f"{disc_name}  ·  {role_label}")
-        else:
-            self._status_label.setText("")
-
-    # ------------------------------------------------------------------
-    # Confirm
-    # ------------------------------------------------------------------
-
-    def _on_confirm(self) -> None:
+        update_state(
+            last_discipline_path=self.selected_discipline_path,
+            last_role=role,
+        )
         self.accept()
 
 
