@@ -6,8 +6,6 @@ Author tool — main window.
 Slice 2: video loading, frame scrubber, annotation workflow — IMPLEMENTED.
 Slice 3: flow builder panel.
 Slice 4: publish + document preview.
-Slice 3: flow builder panel.
-Slice 4: publish + document preview.
 """
 
 from __future__ import annotations
@@ -498,7 +496,6 @@ class AuthorWindow(QMainWindow):
 
     def _on_stance_saved(self, stance_id: str) -> None:
         """Called after AnnotationPanel saves a Stance — refresh catalog."""
-        self._stances = {**self._stances}  # trigger refresh
         self._populate_catalog()
         self.statusBar().showMessage(f"Hut gespeichert: {stance_id}")
 
