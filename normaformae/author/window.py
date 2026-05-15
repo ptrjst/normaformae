@@ -3,10 +3,9 @@ author/window.py
 
 Author tool — main window.
 
-Slice 1: full stub layout. Vocabulary-driven section headers.
-         Multi-select support technique assignment in properties panel.
-
-Slice 2: video loading, frame scrubber, annotation workflow.
+Slice 2: video loading, frame scrubber, annotation workflow — IMPLEMENTED.
+Slice 3: flow builder panel.
+Slice 4: publish + document preview.
 Slice 3: flow builder panel.
 Slice 4: publish + document preview.
 """
@@ -28,6 +27,8 @@ from normaformae.core.discipline_loader import (
     save_support_technique, DisciplineLoadError,
 )
 from normaformae.glossary import UI, resolve_ui
+from normaformae.author.video_panel import VideoPanel
+from normaformae.author.annotation_panel import AnnotationPanel
 
 
 class AuthorWindow(QMainWindow):
@@ -49,7 +50,7 @@ class AuthorWindow(QMainWindow):
         self._discipline_path = discipline_path
         self._discipline: dict = {}
         self._vocab: dict = {}
-        self._rui: dict = UI.copy()
+        self._rui: dict = UI.copy()  # safe fallback; resolved after discipline loads
         self._stances: dict = {}
         self._sequences: dict = {}
         self._flows: dict = {}
@@ -57,7 +58,9 @@ class AuthorWindow(QMainWindow):
 
         # Track which item is currently shown in the properties panel
         self._current_item_id: str = ""
-        self._current_item_type: str = ""  # "stance" | "sequence" | "flow" | "support"
+        self._current_item_type: str = ""
+        self._video_panel: VideoPanel | None = None
+        self._annotation_panel: AnnotationPanel | None = None  # "stance" | "sequence" | "flow" | "support"
 
         self.setWindowTitle(UI["author_window_title"])
         self.setMinimumSize(1100, 700)
@@ -194,53 +197,39 @@ class AuthorWindow(QMainWindow):
         return self._work_tabs
 
     def _build_annotation_tab(self) -> QWidget:
+        """
+        Slice 2: real annotation tab with VideoPanel + AnnotationPanel side by side.
+        VideoPanel (left): frame display + scrubber.
+        AnnotationPanel (right): range selection + label + extract/save.
+        """
         tab = QWidget()
-        layout = QVBoxLayout(tab)
-        layout.setContentsMargins(12, 12, 12, 12)
-        layout.setSpacing(8)
+        layout = QHBoxLayout(tab)
+        layout.setContentsMargins(4, 4, 4, 4)
+        layout.setSpacing(4)
 
-        video_placeholder = QFrame()
-        video_placeholder.setFrameShape(QFrame.Shape.Box)
-        video_placeholder.setMinimumHeight(320)
-        video_placeholder.setStyleSheet(
-            "background-color: #1a1a1a; border: 1px solid #444;"
+        # VideoPanel — takes the majority of the width
+        self._video_panel = VideoPanel(parent=tab)
+        layout.addWidget(self._video_panel, stretch=3)
+
+        # AnnotationPanel — narrower right strip
+        self._annotation_panel = AnnotationPanel(
+            discipline_cfg=self._discipline,
+            discipline_path=self._discipline_path,
+            vocab=self._vocab,
+            stances=self._stances,
+            sequences=self._sequences,
+            parent=tab,
         )
-        placeholder_label = QLabel(
-            "Video noch nicht geladen\n\n"
-            f"→ '{UI['load_video']}' in der Werkzeugleiste"
+        self._annotation_panel.setMaximumWidth(280)
+
+        # Connect signals
+        self._video_panel.frame_changed.connect(
+            self._annotation_panel.on_frame_changed
         )
-        placeholder_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        placeholder_label.setStyleSheet("color: #888; font-size: 13px;")
-        placeholder_layout = QVBoxLayout(video_placeholder)
-        placeholder_layout.addWidget(placeholder_label)
-        layout.addWidget(video_placeholder)
+        self._annotation_panel.stance_saved.connect(self._on_stance_saved)
+        self._annotation_panel.sequence_saved.connect(self._on_sequence_saved)
 
-        scrubber_placeholder = QFrame()
-        scrubber_placeholder.setFrameShape(QFrame.Shape.Box)
-        scrubber_placeholder.setFixedHeight(48)
-        scrubber_placeholder.setStyleSheet(
-            "background-color: #2a2a2a; border: 1px solid #555;"
-        )
-        scrubber_label = QLabel("Zeitachse (Slice 2)")
-        scrubber_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        scrubber_label.setStyleSheet("color: #666; font-size: 11px;")
-        scrubber_layout = QVBoxLayout(scrubber_placeholder)
-        scrubber_layout.addWidget(scrubber_label)
-        layout.addWidget(scrubber_placeholder)
-
-        btn_row = QHBoxLayout()
-        for label in (
-            self._vocab["static"]["singular"],
-            self._vocab["transition"]["singular"],
-            self._discipline.get("annotation_labels", {}).get("ignore", "Ignorieren"),
-        ):
-            btn = QPushButton(label)
-            btn.setMinimumHeight(36)
-            btn.setEnabled(False)
-            btn.setToolTip("Verfügbar nach dem Laden eines Videos (Slice 2)")
-            btn_row.addWidget(btn)
-        layout.addLayout(btn_row)
-
+        layout.addWidget(self._annotation_panel, stretch=1)
         return tab
 
     def _build_flow_builder_tab(self) -> QWidget:
@@ -487,11 +476,38 @@ class AuthorWindow(QMainWindow):
             self, UI["load_video"], "",
             "Videodateien (*.mp4 *.mov *.avi *.mkv);;Alle Dateien (*)"
         )
-        if path:
+        if not path:
+            return
+        try:
+            # Switch to annotation tab and load the video
+            self._work_tabs.setCurrentIndex(0)
+            if self._video_panel is None:
+                raise RuntimeError("VideoPanel nicht initialisiert.")
+            self._video_panel.load_video(path)
+            info = self._video_panel.info
+            if self._annotation_panel and info:
+                self._annotation_panel.set_video_context(path, info.fps)
+            name = Path(path).name
             self.statusBar().showMessage(
-                f"Video ausgewählt: {Path(path).name}  "
-                "[Slice 2: Verarbeitung noch nicht implementiert]"
+                f"Video geladen: {name}  ·  "
+                f"{info.frame_count} Bilder  ·  {info.fps:.2f} fps  ·  "
+                f"Dauer: {info.duration:.1f}s"
             )
+        except Exception as e:
+            QMessageBox.critical(self, "Videofehler", str(e))
+
+    def _on_stance_saved(self, stance_id: str) -> None:
+        """Called after AnnotationPanel saves a Stance — refresh catalog."""
+        self._stances = {**self._stances}  # trigger refresh
+        self._populate_catalog()
+        self.statusBar().showMessage(f"Hut gespeichert: {stance_id}")
+
+    def _on_sequence_saved(self, seq_id: str) -> None:
+        """Called after AnnotationPanel saves a Sequence — refresh catalog."""
+        self._populate_catalog()
+        if self._annotation_panel:
+            self._annotation_panel.refresh_catalogs()
+        self.statusBar().showMessage(f"Übergang gespeichert: {seq_id}")
 
     def _on_new_flow(self) -> None:
         _stub_message(self, self._rui["new_flow"])

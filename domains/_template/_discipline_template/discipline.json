@@ -1,66 +1,59 @@
 {
   "_comment": "Discipline template — fill all REPLACE fields. Keys are English. Values are in German (or target language).",
-
-  "discipline_id":   "REPLACE_WITH_DISCIPLINE_ID",
-  "domain_id":       "REPLACE_WITH_PARENT_DOMAIN_ID",
-  "display_name":    "REPLACE: Anzeigename der Disziplin",
-  "description":     "REPLACE: Beschreibung der Disziplin.",
-  "version":         "1.0.0",
-  "status":          "draft",
-
+  "discipline_id": "REPLACE_WITH_DISCIPLINE_ID",
+  "domain_id": "REPLACE_WITH_PARENT_DOMAIN_ID",
+  "display_name": "REPLACE: Anzeigename der Disziplin",
+  "description": "REPLACE: Beschreibung der Disziplin.",
+  "version": "1.0.0",
+  "status": "draft",
   "vocabulary": {
     "_comment": "Domain-specific labels for the four catalog concept types. Provide singular and plural.",
     "static": {
       "singular": "REPLACE: z.B. 'Hut' / 'Position' / 'Stellung'",
-      "plural":   "REPLACE: z.B. 'Huten' / 'Positionen' / 'Stellungen'"
+      "plural": "REPLACE: z.B. 'Huten' / 'Positionen' / 'Stellungen'"
     },
     "transition": {
       "singular": "REPLACE: z.B. 'Hieb' / 'Schritt' / 'Technik'",
-      "plural":   "REPLACE: z.B. 'Hiebe' / 'Schritte' / 'Techniken'"
+      "plural": "REPLACE: z.B. 'Hiebe' / 'Schritte' / 'Techniken'"
     },
     "flow": {
       "singular": "REPLACE: z.B. 'Drill' / 'Choreographie' / 'Kata'",
-      "plural":   "REPLACE: z.B. 'Drills' / 'Choreographien' / 'Katas'"
+      "plural": "REPLACE: z.B. 'Drills' / 'Choreographien' / 'Katas'"
     },
     "support": {
       "singular": "REPLACE: z.B. 'Grundtechnik' / 'Basis-Element'",
-      "plural":   "REPLACE: z.B. 'Grundtechniken' / 'Basis-Elemente'"
+      "plural": "REPLACE: z.B. 'Grundtechniken' / 'Basis-Elemente'"
     }
   },
-
   "practitioner_levels": [
     {
-      "level_id":    "REPLACE: z.B. 'schueler'",
-      "label":       "REPLACE: z.B. 'Schüler'",
+      "level_id": "REPLACE: z.B. 'schueler'",
+      "label": "REPLACE: z.B. 'Schüler'",
       "description": "REPLACE: Beschreibung des Niveaus."
     }
   ],
-
   "scoring_criteria": [
     {
       "criterion_id": "REPLACE: z.B. 'struktur'",
-      "label":        "REPLACE: z.B. 'Struktur'",
-      "description":  "REPLACE: Was wird bewertet?"
+      "label": "REPLACE: z.B. 'Struktur'",
+      "description": "REPLACE: Was wird bewertet?"
     }
   ],
-
+  "keypoint_visibility_threshold": 0.5,
   "annotation_labels": {
-    "stance":     "REPLACE: z.B. 'Hut'",
+    "stance": "REPLACE: z.B. 'Hut'",
     "transition": "Übergang",
-    "ignore":     "Ignorieren"
+    "ignore": "Ignorieren"
   },
-
   "library_paths": {
-    "stances":   "library/stances/",
+    "stances": "library/stances/",
     "sequences": "library/sequences/",
-    "flows":     "library/flows/",
-    "support":   "library/support/"
+    "flows": "library/flows/",
+    "support": "library/support/"
   },
-
   "output": {
-    "folder":          "output",
+    "folder": "output",
     "filename_prefix": "REPLACE: z.B. 'liechtenauer_longsword'"
   },
-
   "wiktenauer_search_url": "REPLACE or remove: z.B. 'https://wiktenauer.com/wiki/Special:Search?search={term}'"
 }

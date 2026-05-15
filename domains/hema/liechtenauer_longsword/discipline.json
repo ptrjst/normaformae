@@ -1,98 +1,92 @@
 {
-  "discipline_id":   "liechtenauer_longsword",
-  "domain_id":       "hema",
-  "display_name":    "Liechtenauer — Langschwert",
-  "description":     "Kunst des langen Schwertes nach Johannes Liechtenauer und seinen Nachfolgern (Meyer, Ringeck, von Danzig u.a.). Systematisches Fechtbuch-System aus dem 14.–16. Jahrhundert.",
-  "version":         "1.0.0",
-  "status":          "published",
-
+  "discipline_id": "liechtenauer_longsword",
+  "domain_id": "hema",
+  "display_name": "Liechtenauer — Langschwert",
+  "description": "Kunst des langen Schwertes nach Johannes Liechtenauer und seinen Nachfolgern (Meyer, Ringeck, von Danzig u.a.). Systematisches Fechtbuch-System aus dem 14.–16. Jahrhundert.",
+  "version": "1.0.0",
+  "status": "published",
   "vocabulary": {
     "static": {
       "singular": "Hut",
-      "plural":   "Huten"
+      "plural": "Huten"
     },
     "transition": {
       "singular": "Hieb",
-      "plural":   "Hiebe"
+      "plural": "Hiebe"
     },
     "flow": {
       "singular": "Drill",
-      "plural":   "Drills"
+      "plural": "Drills"
     },
     "support": {
       "singular": "Grundtechnik",
-      "plural":   "Grundtechniken"
+      "plural": "Grundtechniken"
     }
   },
-
   "practitioner_levels": [
     {
-      "level_id":    "schueler",
-      "label":       "Schüler",
+      "level_id": "schueler",
+      "label": "Schüler",
       "description": "Anfänger — erlernt Grundhuten und einfache Haue"
     },
     {
-      "level_id":    "geselle",
-      "label":       "Geselle",
+      "level_id": "geselle",
+      "label": "Geselle",
       "description": "Fortgeschrittener — kennt alle Meisterhäue und grundlegende Bindungsarbeit"
     },
     {
-      "level_id":    "freifechter",
-      "label":       "Freifechter",
+      "level_id": "freifechter",
+      "label": "Freifechter",
       "description": "Erfahrener Fechter — beherrscht Mensurarbeit und taktische Kombinationen"
     },
     {
-      "level_id":    "meister",
-      "label":       "Meister",
+      "level_id": "meister",
+      "label": "Meister",
       "description": "Meister des langen Schwertes — vollständige Beherrschung des Systems"
     }
   ],
-
   "scoring_criteria": [
     {
       "criterion_id": "struktur",
-      "label":        "Struktur",
-      "description":  "Körperhaltung und Ausrichtung hinter dem Schwert"
+      "label": "Struktur",
+      "description": "Körperhaltung und Ausrichtung hinter dem Schwert"
     },
     {
       "criterion_id": "mensur",
-      "label":        "Mensur",
-      "description":  "Abstandskontrolle zum Gegner"
+      "label": "Mensur",
+      "description": "Abstandskontrolle zum Gegner"
     },
     {
       "criterion_id": "linie",
-      "label":        "Linie",
-      "description":  "Ausrichtung von Spitze oder Schneide zur Bedrohungslinie"
+      "label": "Linie",
+      "description": "Ausrichtung von Spitze oder Schneide zur Bedrohungslinie"
     },
     {
       "criterion_id": "timing",
-      "label":        "Timing",
-      "description":  "Zeitliche Ausführung der Bewegung"
+      "label": "Timing",
+      "description": "Zeitliche Ausführung der Bewegung"
     },
     {
       "criterion_id": "krafteinsatz",
-      "label":        "Krafteinsatz",
-      "description":  "Angemessener Einsatz von Kraft und Weichheit (Hart und Weich)"
+      "label": "Krafteinsatz",
+      "description": "Angemessener Einsatz von Kraft und Weichheit (Hart und Weich)"
     }
   ],
-
+  "keypoint_visibility_threshold": 0.5,
   "annotation_labels": {
-    "stance":     "Hut",
+    "stance": "Hut",
     "transition": "Übergang",
-    "ignore":     "Ignorieren"
+    "ignore": "Ignorieren"
   },
-
   "library_paths": {
-    "stances":   "library/stances/",
+    "stances": "library/stances/",
     "sequences": "library/sequences/",
-    "flows":     "library/flows/",
-    "support":   "library/support/"
+    "flows": "library/flows/",
+    "support": "library/support/"
   },
-
   "output": {
-    "folder":          "output",
+    "folder": "output",
     "filename_prefix": "liechtenauer_longsword"
   },
-
   "wiktenauer_search_url": "https://wiktenauer.com/wiki/Special:Search?search={term}"
 }
