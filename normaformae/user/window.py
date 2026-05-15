@@ -83,7 +83,9 @@ class UserWindow(QMainWindow):
         tb.addSeparator()
 
         n_flows = len(self._published_flows)
-        flow_info = f"{n_flows} {self._vocab.get("flow",{}).get("singular","Ablauf")}" if n_flows == 1 else f"{n_flows} {self._vocab.get("flow",{}).get("plural","Abläufe")}"
+        flow_vocab = self._vocab.get("flow", {})
+        flow_term = flow_vocab.get("singular", "Ablauf") if n_flows == 1 else flow_vocab.get("plural", "Abläufe")
+        flow_info = f"{n_flows} {flow_term}"
         self._flow_count_label = QLabel(flow_info + " verfügbar  ")
         tb.addWidget(self._flow_count_label)
 

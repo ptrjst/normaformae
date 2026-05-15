@@ -1,0 +1,18 @@
+{
+  "_schema_version": "1.0.0",
+  "_schema_type": "sequence",
+  "sequence_id": "unterhau",
+  "discipline_id": "liechtenauer_longsword",
+  "label": "Unterhau",
+  "status": "draft",
+  "from_stance_id": null,
+  "transition_id": null,
+  "to_stance_id": null,
+  "duration_seconds": 0.9666,
+  "source_video": "C:/~tmp/video.mp4",
+  "timestamp_start": 2.1058,
+  "timestamp_end": 3.0724,
+  "description": "",
+  "motion_cues": [],
+  "common_errors": []
+}
