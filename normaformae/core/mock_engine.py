@@ -86,9 +86,9 @@ def build_mock_recognition_result(
         # Randomly add a deviation note for lower-confidence detections
         if confidence < 0.80:
             criterion = random.choice(criteria)
-            deviation = f"{criterion} unzureichend"
+            deviation = [f"{criterion} unzureichend"]
         else:
-            deviation = ""
+            deviation = []
 
         detected_stances.append({
             "stance_id":       stance.get("stance_id", ""),
@@ -120,10 +120,12 @@ def build_mock_recognition_result(
         unrecognised.append({"start": round(t + 0.5, 2), "end": round(t + 1.8, 2)})
 
     return {
-        "discipline_id":        Path(discipline_path).name,
-        "video_path":           video_path,
-        "detected_stances":     detected_stances,
-        "detected_sequences":   detected_sequences,
-        "matched_flows":        matched_flows,
+        "discipline_id":         Path(discipline_path).name,
+        "video_path":            video_path,
+        "detected_stances":      detected_stances,
+        "detected_sequences":    detected_sequences,
+        "matched_flows":         matched_flows,
         "unrecognised_segments": unrecognised,
+        "engine":                "mock",
+        "config":                {"frame_sample_rate": "—", "stance_match_threshold": "—"},
     }

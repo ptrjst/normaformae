@@ -392,7 +392,6 @@ def _compute_unrecognised(
 
 
 def _empty_result(disc_id: str, video_path: str, config) -> dict:
-    from dataclasses import asdict
     return {
         "discipline_id":         disc_id,
         "video_path":            video_path,

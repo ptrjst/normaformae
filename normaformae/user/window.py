@@ -155,10 +155,9 @@ class UserWindow(QMainWindow):
         disc_name = self._discipline.get("display_name", "")
         tb.addWidget(QLabel(f"  {disc_name}  "))
         tb.addSeparator()
-        n = len(self._valid_stances)
-        total = len(load_all_stances(self._discipline_path)) if self._discipline_path else 0
+        n_valid = len(self._valid_stances)
         tb.addWidget(QLabel(
-            f"{n}/{total} {self._vocab.get('static',{}).get('plural','Huten')} im Katalog  "
+            f"{n_valid} {self._vocab.get('static',{}).get('plural','Huten')} im Katalog  "
         ))
 
     # ------------------------------------------------------------------
