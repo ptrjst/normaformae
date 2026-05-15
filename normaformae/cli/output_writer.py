@@ -102,23 +102,25 @@ def _resolve_output_dir(discipline_path: str) -> Path:
 # ---------------------------------------------------------------------------
 
 def _write_document_stub(path: Path, result: dict, video_path: str) -> None:
-    """Slice 1 stub. Slice 4: replaced with Jinja2 HTML → PDF renderer."""
+    """Slice 3: real data from engine. Slice 4: replaced with Jinja2 HTML → PDF."""
     lines = [
         "NORMAFORMAE — Dokument-Output (Entwurf, Slice 1)",
         "=" * 60,
         f"Disziplin:   {result.get('discipline_id', '—')}",
         f"Video:       {Path(video_path).name}",
         f"Erstellt:    {datetime.now().strftime('%d.%m.%Y %H:%M:%S')}",
+        f"Engine:      {result.get('engine', '?')}",
         "",
         "ERKANNTE HUTEN",
         "-" * 40,
     ]
     for ds in result.get("detected_stances", []):
-        dev = f"  ⚠ {ds['deviation_notes']}" if ds.get("deviation_notes") else "  ✓"
+        devs = ds.get("deviation_notes", [])
+        dev_str = "  ⚠ " + ", ".join(devs) if devs else "  ✓"
         lines.append(
             f"  {ds['label']:20}  "
-            f"@{ds['timestamp_start']:.2f}s – {ds['timestamp_end']:.2f}s  "
-            f"Sicherheit: {ds['confidence']:.0%}{dev}"
+            f"@{ds['timestamp_start']:.2f}s–{ds['timestamp_end']:.2f}s  "
+            f"Sicherheit: {ds['confidence']:.0%}{dev_str}"
         )
 
     lines += ["", "ERKANNTE SEQUENZEN", "-" * 40]
@@ -146,8 +148,7 @@ def _write_document_stub(path: Path, result: dict, video_path: str) -> None:
     lines += [
         "",
         "=" * 60,
-        "Hinweis: Dies ist eine Stub-Ausgabe (Slice 1).",
-        "Vollständiges HTML/PDF-Dokument wird in Slice 4 implementiert.",
+        "Hinweis: Vollständiges HTML/PDF-Dokument wird in Slice 4 implementiert.",
     ]
     path.write_text("\n".join(lines), encoding="utf-8")
 

@@ -73,6 +73,11 @@
     }
   ],
   "keypoint_visibility_threshold": 0.5,
+  "analysis_frame_sample_rate": 5,
+  "stance_match_threshold": 0.85,
+  "min_consecutive_matches": 2,
+  "max_merge_gap_seconds": 0.5,
+  "analysis_model_variant": "full",
   "annotation_labels": {
     "stance": "Hut",
     "transition": "Übergang",

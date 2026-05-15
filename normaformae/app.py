@@ -69,7 +69,7 @@ def run_cli(video_path: str, discipline_id: str | None,
     from normaformae.core.logger import setup_logging
     setup_logging(debug=debug)
     from normaformae.core.discipline_loader import load_discipline, DisciplineLoadError
-    from normaformae.core.mock_engine import build_mock_recognition_result
+    from normaformae.core.discipline_loader import load_all_stances
     from normaformae.cli.output_writer import write_cli_outputs
 
     video = Path(video_path)
@@ -88,10 +88,26 @@ def run_cli(video_path: str, discipline_id: str | None,
     print(f"[Normaformae] Video:     {video.name}")
     print("[Normaformae] Analyse läuft…")
 
-    result = build_mock_recognition_result(
-        discipline_path=discipline_path,
-        video_path=str(video),
-    )
+    # Use real engine if valid stances exist, else fall back to mock
+    stances = load_all_stances(discipline_path)
+    valid   = {sid: s for sid, s in stances.items() if s.get("keypoints")}
+    if valid:
+        from normaformae.core.engine import analyse
+        result = analyse(
+            video_path=str(video),
+            discipline_path=discipline_path,
+            progress_callback=lambda cur, tot: print(
+                f"  [{cur}/{tot}]", end="\r", flush=True
+            ),
+        )
+        print()  # newline after progress
+    else:
+        print("[Normaformae] Keine annotierten Huten — Simulation wird verwendet.")
+        from normaformae.core.mock_engine import build_mock_recognition_result
+        result = build_mock_recognition_result(
+            discipline_path=discipline_path,
+            video_path=str(video),
+        )
 
     output_paths = write_cli_outputs(
         result=result,

@@ -88,12 +88,12 @@ def download_model(variant: str = DEFAULT_VARIANT) -> Path:
         def _progress(block_num, block_size, total_size):
             if total_size > 0:
                 pct = min(block_num * block_size / total_size * 100, 100)
-                bar = "#" * int(pct / 5) + "-" * (20 - int(pct / 5))
+                bar = "█" * int(pct / 5) + "░" * (20 - int(pct / 5))
                 print(f"\r  [{bar}] {pct:.0f}%", end="", flush=True)
 
         urllib.request.urlretrieve(url, out_path, reporthook=_progress)
         print()  # newline after progress bar
-        print(f"  OK Gespeichert: {out_path.stat().st_size / 1_000_000:.1f} MB")
+        print(f"  ✓ Gespeichert: {out_path.stat().st_size / 1_000_000:.1f} MB")
         return out_path
 
     except Exception as e:
@@ -113,10 +113,10 @@ def list_models() -> None:
         path = models_dir() / filename
         if path.exists() and path.stat().st_size > 1_000:
             size_mb = path.stat().st_size / 1_000_000
-            marker = "[OK]"
+            marker = "✓"
             detail = f"{size_mb:.1f} MB"
         else:
-            marker = "[  ]"
+            marker = "○"
             detail = f"fehlt  (ca. {approx_size / 1_000_000:.1f} MB)"
         default = " [Standard]" if variant == DEFAULT_VARIANT else ""
         print(f"  {marker} {variant:6} — {filename:40} {detail}{default}")

@@ -90,10 +90,6 @@ def average_keypoints(frames_keypoints: list[np.ndarray]) -> np.ndarray:
     for w, kp in zip(weights, frames_keypoints):
         averaged += (w / total) * kp
 
-    log.debug(
-        "Mittelwert aus %d Bildern berechnet (Gewichte: min=%.3f max=%.3f)",
-        len(frames_keypoints), float(weights.min()), float(weights.max()),
-    )
     return averaged
 
 
